@@ -6,7 +6,7 @@ let candidats = [
         cin: "AB123456",
         nom: "Boushaba",
         prenom: "Soufiane",
-        partiPolitique: "Indépendant",
+        partiPolitique: "INP",
         age: 40,
         electeurs: []
     },
@@ -14,7 +14,7 @@ let candidats = [
         cin: "CD234567",
         nom: "Alaoui",
         prenom: "Yassine",
-        partiPolitique: "Parti de la Justice et du Développement",
+        partiPolitique: "PJD",
         age: 45,
         electeurs: []
     },
@@ -22,7 +22,7 @@ let candidats = [
         cin: "EF345678",
         nom: "Benali",
         prenom: "Sara",
-        partiPolitique: "Parti de l'Istiqlal",
+        partiPolitique: "PI",
         age: 38,
         electeurs: []
     },
@@ -30,55 +30,55 @@ let candidats = [
         cin: "GH456789",
         nom: "El Idrissi",
         prenom: "Omar",
-        partiPolitique: "Rassemblement National des Indépendants",
+        partiPolitique: "RNI",
         age: 52,
-        electeurs: []
+        electeurs: ["h12345","ha12345"]
     },
     {
         cin: "IJ567890",
         nom: "Amrani",
         prenom: "Nadia",
-        partiPolitique: "Parti Authenticité et Modernité",
+        partiPolitique: "PAM",
         age: 41,
-        electeurs: []
+        electeurs: ["hk1234","b123456","hk12346","bE12345"]
     },
     {
         cin: "KL678901",
         nom: "Tazi",
         prenom: "Mehdi",
-        partiPolitique: "Union Socialiste des Forces Populaires",
+        partiPolitique: "USFP",
         age: 47,
-        electeurs: []
+        electeurs: ["hh1234","bb123456","hk12346","bE12345"]
     },
     {
         cin: "MN789012",
         nom: "Bennani",
         prenom: "Imane",
-        partiPolitique: "Mouvement Populaire",
+        partiPolitique: "MP",
         age: 35,
-        electeurs: []
+        electeurs: ["hh124","bb12","hk1","bE125","h12344555"]
     },
     {
         cin: "OP890123",
         nom: "Chraibi",
         prenom: "Ayoub",
-        partiPolitique: "Parti du Progrès et du Socialisme",
+        partiPolitique: "PPS",
         age: 43,
-        electeurs: []
+        electeurs: ["bb12","hk1","bE125","h12344555"]
     },
     {
         cin: "QR901234",
         nom: "Fassi",
         prenom: "Salma",
-        partiPolitique: "Parti Socialiste",
+        partiPolitique: "PS",
         age: 39,
-        electeurs: []
+        electeurs: ["bb87654321","h12344555"]
     },
     {
         cin: "ST012345",
         nom: "Kabbaj",
         prenom: "Hamza",
-        partiPolitique: "Indépendant",
+        partiPolitique: "INP",
         age: 48,
         electeurs: []
     }
@@ -105,8 +105,7 @@ function ajouterCandidat(){
         parti :prompt("Parti politique : "),
         electeurs:[]
     }
-   // let candidat = {cin : cin,
-      //  prenom :prenom ,nom :nom ,age :age ,partiPolitique :parti, electeurs : electeurs
+ 
         candidats.push(candidat);
     console.log("Candidat ajouté avec succès.");
 };
@@ -118,36 +117,43 @@ function ajouterPlusieursCandidats(){
     }
 
 } 
-function aficherCandidats(){
-    for(let i=0;i<candidats.length;i++){
-        console.log(candidats[i]);
+function aficherCandidats(listC){
+    for(let i=0;i<listC.length;i++){
+        console.log(listC[i]);
     }
     
 }
+function trierParNombreDeVote (){
+                    let newlist=[]
+                    for(let i of candidats){
+                        newlist.push(i)
+                           
+                    }
+                    for(let i=0;i<newlist.length ;i++){
+                        for(let j=0;j<newlist.length-1;j++){
+                            if (newlist[j].electeurs.length < newlist[j+1].electeurs.length) {
+                                [newlist[j], newlist[j+1]] = [newlist[j+1], newlist[j]]
+                            }
+                        }
+                    }
+                    return newlist
+            
+}
 function afficherListeCandidats(){
+    console.log(`1.affichage tous les candidats:
+            2.Trier par nombre de vote :
+            3.Filter Politique
+            0.quitter`)
 
-        let choi=Number(prompt("1 affichage tous les candidats:\n2 Trier par nombre de vote :\n3 Filter Politique\n0 quitter"));
+        let choi=Number(prompt("choix: ?"));
         switch (choi){
             case 1 : 
                 aficherCandidats()
                 break
-            case 2 :    
-                function trierParNombreDeVote (){
-                    for(let i=0;i<candidats.length -1;i++){
-                    for(let j=0;j<candidats.length -1;j++){
-                        if (candidats[j].electeurs.length<candidats[j+1].electeurs.length){
-                            let temp =candidats[j];
-                            candidats[j] =candidats[ j + 1 ];
-                            candidats[ j + 1 ] = temp
-                        }
-                    
-                    }
-                }
-            
-            }
-                trierParNombreDeVote()
+            case 2 : 
                     console.log("Candidats triés par nombre de vote : ");
-                    aficherCandidats()
+                    let res=trierParNombreDeVote()
+                    aficherCandidats(res)
                     break
             case 3 :
                 let parti = prompt("Donner le Parti Politique : ");
@@ -250,11 +256,26 @@ function rechercherCandidat(){
         }
     }
 }
+function afficherStatistiques(){
+    console.log(" le nombre total de candidats est : "+candidats.length)
+    let somme=0
+    for(let i=0;i<candidats.length;i++){
+
+        somme+=candidats[i].electeurs.length
+    }
+    
+    console.log("le nombre total de votes exprimés dans toute l'élection est :"+somme)
+    let top3=trierParNombreDeVote()
+    for(let i=0;i<3;i++){
+        console.log(top3[i])
+    }
+    
+        
+    
+}
 
 while(choix !== "0"){
-
-    choix = prompt(`
-========================================
+    console.log(`========================================
     MENU     ÉLECTIONS
 ========================================
 1. Ajouter un nouveau candidat
@@ -268,8 +289,8 @@ while(choix !== "0"){
 0. Quitter
 
 
-========================================
-Votre choix:` );
+========================================`)
+    choix = prompt(`Votre choix:` );
 
         switch (choix) {
             case '1':
